@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light dark" />
+<title>Register — Student Portal</title>
+<meta name="description" content="Create a student portal account." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="auth-wrap">
+  <div class="auth-card wide">
+    <div class="auth-head">
+      <img class="brand-mark" src="favicon.svg" alt="" />
+      <h1>Create your account</h1>
+      <p>Register as a student to join the directory.</p>
+    </div>
+
+    <form id="registerForm" novalidate>
+      <div class="field-row">
+        <div class="field">
+          <label for="first_name">First name</label>
+          <input type="text" id="first_name" placeholder="Jawad" autocomplete="given-name" required />
+        </div>
+        <div class="field">
+          <label for="last_name">Last name</label>
+          <input type="text" id="last_name" placeholder="Hassan" autocomplete="family-name" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="jawadh" autocomplete="username" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@university.edu" autocomplete="email" required />
+      </div>
+
+      <div class="field">
+        <label for="password">Password <span class="label-hint">(at least 6 characters)</span></label>
+        <input type="password" id="password" placeholder="Choose a password"
+               autocomplete="new-password" minlength="6" required />
+      </div>
+
+      <div class="field">
+        <label for="department">Department</label>
+        <select id="department" required></select>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="semester">Semester</label>
+          <select id="semester" required></select>
+        </div>
+        <div class="field">
+          <label for="cgpa">CGPA <span class="label-hint">(0.00 – 4.00)</span></label>
+          <input type="number" id="cgpa" placeholder="3.40" min="0" max="4" step="0.01" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">Create account</button>
+      <p class="msg" id="msg"></p>
+    </form>
+
+    <p class="auth-foot">
+      Already registered? <a href="index.html">Sign in</a>
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script>
+  if (!isConfigured()) {
+    showSetupNotice();
+  } else {
+    fillDepartments(document.getElementById("department"));
+    fillSemesters(document.getElementById("semester"));
+
+    const form = document.getElementById("registerForm");
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("submitBtn");
+
+    const val = (id) => document.getElementById(id).value.trim();
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMsg(msg);
+
+      const profile = {
+        first_name: val("first_name"),
+        last_name: val("last_name"),
+        username: val("username"),
+        email: val("email"),
+        department: val("department"),
+        semester: parseInt(val("semester"), 10),
+        cgpa: parseFloat(val("cgpa")),
+      };
+      const password = document.getElementById("password").value;
+
+      // Validate before touching the network, so mistakes are instant.
+      if (!profile.first_name || !profile.last_name) return showMsg(msg, "Enter your first and last name.");
+      if (!profile.username) return showMsg(msg, "Choose a username.");
+      if (!/^[A-Za-z0-9_.]+$/.test(profile.username))
+        return showMsg(msg, "Username can only use letters, numbers, dots and underscores.");
+      if (!profile.email) return showMsg(msg, "Enter your email.");
+      if (password.length < 6) return showMsg(msg, "Password must be at least 6 characters.");
+      if (!profile.department) return showMsg(msg, "Pick your department.");
+      if (!Number.isInteger(profile.semester)) return showMsg(msg, "Pick your semester.");
+      if (Number.isNaN(profile.cgpa) || profile.cgpa < 0 || profile.cgpa > 4)
+        return showMsg(msg, "CGPA must be between 0.00 and 4.00.");
+
+      setBusy(btn, true, "Creating account…");
+      try {
+        const { data, error } = await db().auth.signUp({
+          email: profile.email,
+          password,
+        });
+        if (error) throw error;
+
+        if (!data.session) {
+          // Email confirmation is switched on for this project.
+          showMsg(
+            msg,
+            "Account created. Check your inbox to confirm your email, then sign in — your profile is saved on first sign-in.",
+            "success"
+          );
+          sessionStorage.setItem("pending_profile", JSON.stringify(profile));
+          setBusy(btn, false);
+          return;
+        }
+
+        const { error: pErr } = await db()
+          .from("students")
+          .insert({ id: data.user.id, ...profile });
+        if (pErr) throw pErr;
+
+        window.location.replace("dashboard.html");
+      } catch (err) {
+        showMsg(msg, friendlyError(err));
+        setBusy(btn, false);
+      }
+    });
+  }
+</script>
+</body>
+</html>

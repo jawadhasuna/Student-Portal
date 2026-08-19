@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light dark" />
+<title>Sign in — Student Portal</title>
+<meta name="description" content="Student portal — sign in to view and manage student records." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-head">
+      <img class="brand-mark" src="favicon.svg" alt="" />
+      <h1>Student Portal</h1>
+      <p>Sign in to view the student directory.</p>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@university.edu"
+               autocomplete="email" required />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Your password"
+               autocomplete="current-password" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">Sign in</button>
+      <p class="msg" id="msg"></p>
+    </form>
+
+    <p class="auth-foot">
+      No account yet? <a href="register.html">Register</a>
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script>
+  if (!isConfigured()) {
+    showSetupNotice();
+  } else {
+    const form = document.getElementById("loginForm");
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("submitBtn");
+
+    // Already signed in? Skip straight to the dashboard.
+    db().auth.getSession().then(({ data }) => {
+      if (data.session) window.location.replace("dashboard.html");
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMsg(msg);
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        showMsg(msg, "Enter your email and password.");
+        return;
+      }
+
+      setBusy(btn, true, "Signing in…");
+      try {
+        const { error } = await db().auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        window.location.replace("dashboard.html");
+      } catch (err) {
+        showMsg(msg, friendlyError(err));
+        setBusy(btn, false);
+      }
+    });
+  }
+</script>
+</body>
+</html>

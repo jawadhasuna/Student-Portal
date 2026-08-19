@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light dark" />
+<title>Student Directory — Student Portal</title>
+<meta name="description" content="Browse, edit and manage student records." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <img class="brand-mark" src="favicon.svg" alt="" />
+      <span>Student Portal</span>
+    </div>
+    <div class="who">
+      <span class="email" id="whoEmail"></span>
+      <button class="btn btn-ghost btn-sm" id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <div>
+      <h1>Student directory</h1>
+      <p>Every registered student. You can edit or remove your own record.</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="editMineBtn" hidden>Edit my profile</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Students</div>
+      <div class="stat-value" id="statCount">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Average CGPA</div>
+      <div class="stat-value" id="statAvg">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Departments</div>
+      <div class="stat-value" id="statDepts">—</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="Search name, username, department…" aria-label="Search students" />
+    <select id="deptFilter" aria-label="Filter by department"></select>
+  </div>
+
+  <p class="msg" id="msg"></p>
+
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Sem</th>
+            <th>CGPA</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="loading" id="loading">Loading students…</div>
+    <div class="empty" id="empty" hidden>No students match that search.</div>
+  </div>
+</main>
+
+<!-- Edit profile modal -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Edit your profile</h2>
+    <p class="sub">You can only change your own record.</p>
+
+    <form id="editForm" novalidate>
+      <div class="field-row">
+        <div class="field">
+          <label for="e_first">First name</label>
+          <input type="text" id="e_first" required />
+        </div>
+        <div class="field">
+          <label for="e_last">Last name</label>
+          <input type="text" id="e_last" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="e_username">Username</label>
+        <input type="text" id="e_username" required />
+      </div>
+
+      <div class="field">
+        <label for="e_department">Department</label>
+        <select id="e_department" required></select>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="e_semester">Semester</label>
+          <select id="e_semester" required></select>
+        </div>
+        <div class="field">
+          <label for="e_cgpa">CGPA</label>
+          <input type="number" id="e_cgpa" min="0" max="4" step="0.01" required />
+        </div>
+      </div>
+
+      <p class="msg" id="editMsg"></p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
