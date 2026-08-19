@@ -1,4 +1,5 @@
 # Student Portal
+# https://studportals.vercel.app
 
 A student management system: register, sign in, and browse a directory of
 students with their department, semester and CGPA. You can edit or delete your
