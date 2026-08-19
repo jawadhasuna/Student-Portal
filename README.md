@@ -4,10 +4,18 @@ A student management system: register, sign in, and browse a directory of
 students with their department, semester and CGPA. You can edit or delete your
 own record; everyone else's is read-only.
 
-This is a web port of a NetBeans **Java Swing + MySQL desktop app**. Swing draws
-native windows through the JVM, so the original could never be a website — it
-had to be rebuilt rather than deployed. The data model and the three operations
-(`getAllUsers`, `updateUser`, `deleteUser`) are carried over intact.
+**This repository holds two versions of the same project.**
+
+| | |
+|---|---|
+| the web app (repository root) | static HTML + Supabase — the current version |
+| [`java-desktop/`](java-desktop/) | the original NetBeans Java Swing + MySQL app |
+
+The desktop version came first. Swing draws native windows through the JVM, so
+it could never be deployed as a website — it had to be rebuilt rather than
+hosted. The data model and the three operations (`getAllUsers`, `updateUser`,
+`deleteUser`) carried over intact; the security model did not, and that's the
+interesting part.
 
 ## What changed from the Java version
 
