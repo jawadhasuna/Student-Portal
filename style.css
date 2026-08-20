@@ -1,81 +1,56 @@
 /* ===========================================================
-   Student Portal — design tokens
+   Student Portal - design tokens
+
+   One theme, always. The portal is dark whatever the operating
+   system asks for, so there is no prefers-color-scheme block here
+   and no light palette to keep in sync. `color-scheme: dark` below
+   (and the matching <meta> in each page) is what makes the browser
+   draw its own widgets - scrollbars, autofill, pickers, spinners -
+   to match, instead of stamping white boxes onto a navy page.
    =========================================================== */
 :root {
-  --bg:            #F6F6F3;
-  --surface:       #FFFFFF;
-  --surface-sunk:  #EFEFEA;
+  color-scheme: dark;
 
-  --border:        #E4E2DB;
-  --border-strong: #CAC7BE;
+  /* Deep navy, not near-black. Dark enough that the blue reads as ink
+     rather than paint, but still unmistakably blue. The vivid end of the
+     ramp is spent only on buttons, links, focus rings and tags. */
+  --bg:            #101A2B;
+  --surface:       #17233A;
+  --surface-sunk:  #0C1424;
 
-  --text:          #16191C;
-  --text-muted:    #565B61;
-  --text-faint:    #686C72;
+  --border:        #253552;
+  --border-strong: #35496B;
 
-  --accent:        #1F5A80;
-  --accent-hover:  #164762;
-  --accent-tint:   #E6EFF4;
-  --solid:         #1F5A80;
-  --solid-hover:   #164762;
+  --text:          #E8EDF5;
+  --text-muted:    #A2AFC7;
+  --text-faint:    #7D8BA5;
+
+  --accent:        #86BBDF;
+  --accent-hover:  #A5CEEA;
+  --accent-tint:   #1A2B44;
+  --solid:         #2A7099;
+  --solid-hover:   #3184B2;
   --solid-text:    #FFFFFF;
-  --field:         #FFFFFF;
+  --field:         #0E1728;
 
-  --ok:            #06795A;
-  --ok-tint:       #E3F5EF;
-  --warn:          #9A5307;
-  --warn-tint:     #FBF0E1;
-  --danger:        #C13030;
-  --danger-tint:   #FBE9E9;
+  --ok:            #77D6B2;
+  --ok-tint:       #0F3729;
+  --warn:          #E7BE86;
+  --warn-tint:     #382810;
+  --danger:        #F09E9E;
+  --danger-tint:   #3C1A1A;
 
-  /* The arrow is baked into a data URI, so it can't inherit currentColor -
-     it has to be a token that both themes redefine. */
-  --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5L6 8l3-3.5' fill='none' stroke='%23686C72' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  /* Baked into a data URI, so it cannot inherit currentColor. */
+  --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5L6 8l3-3.5' fill='none' stroke='%237D8BA5' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 
-  --shadow-sm: 0 1px 2px rgba(30, 27, 20, 0.05);
-  --shadow-md: 0 1px 3px rgba(30, 27, 20, 0.07), 0 6px 16px rgba(30, 27, 20, 0.06);
+  --shadow-sm: 0 1px 2px rgba(4, 8, 18, 0.30);
+  --shadow-md: 0 1px 3px rgba(4, 8, 18, 0.36), 0 6px 16px rgba(4, 8, 18, 0.30);
 
   --radius:    12px;
   --radius-sm: 8px;
 
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Deep navy, not near-black. Dark enough that the blue reads as ink rather
-       than paint, but still unmistakably blue - which is what keeps the portal
-       from converging with the other project's neutral near-black. The vivid
-       end of the ramp is spent only on buttons, links, focus rings and tags. */
-    --bg:            #101A2B;
-    --surface:       #17233A;
-    --surface-sunk:  #0C1424;
-
-    --border:        #253552;
-    --border-strong: #35496B;
-
-    --text:          #E8EDF5;
-    --text-muted:    #A2AFC7;
-    --text-faint:    #7D8BA5;
-
-    --accent:        #86BBDF;
-    --accent-hover:  #A5CEEA;
-    --accent-tint:   #1A2B44;
-    --solid:         #2A7099;
-    --solid-hover:   #3184B2;
-    --solid-text:    #FFFFFF;
-    --field:         #0E1728;
-
-    --ok:            #77D6B2;   --ok-tint:     #0F3729;
-    --warn:          #E7BE86;   --warn-tint:   #382810;
-    --danger:        #F09E9E;   --danger-tint: #3C1A1A;
-
-    --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5L6 8l3-3.5' fill='none' stroke='%237D8BA5' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-
-    --shadow-sm: 0 1px 2px rgba(4, 8, 18, 0.30);
-    --shadow-md: 0 1px 3px rgba(4, 8, 18, 0.36), 0 6px 16px rgba(4, 8, 18, 0.30);
-  }
 }
 
 * { box-sizing: border-box; }
